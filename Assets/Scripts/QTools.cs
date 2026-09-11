@@ -5,6 +5,17 @@ using System;
 public static class QTools
 {
 
+    /// <returns>Returns the array index of the item if it can be found in the array. Returns -1 otherwise.</returns>
+    public static int FindIndex<T>(T item, T[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (item.Equals(array[i]))
+                return i;
+        }
+        return -1;
+    }
+
     /// <summary>
     /// Compares each number in array one to each number in array two. Finds the pair between which the distance is the largest. Returns that distance.
     /// </summary>
@@ -142,6 +153,34 @@ public static class QTools
         return generatedNumber;
     }
 
+    public static bool AnyStringMatches(string[] primaryStrings, string[] secondaryStrings)
+    {
+        foreach (string primaryString in primaryStrings)
+        {
+            foreach (string secondaryString in secondaryStrings)
+            {
+                if (primaryString == secondaryString)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public static bool AnyComponentMatches(Component[] primaryComponents, Component[] secondaryComponents)
+    {
+        foreach (Component primaryComponent in primaryComponents)
+        {
+            foreach (Component secondaryComponent in secondaryComponents)
+            {
+                if (primaryComponent.GetType() == secondaryComponent.GetType())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
