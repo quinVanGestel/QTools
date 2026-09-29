@@ -6,16 +6,26 @@ public enum ELogLevels
     None, Severe, Important, Mild, Verbose, Trace
 }
 
-[Serializable]
-public class TypeLogLevel
-{
-    [Tooltip("Any one of that type will do! Which specific game object you get it from should not matter at all.")]
-    public MonoBehaviour component;
-    public ELogLevels logLevel;
-}
 
 public class QDebugManager : MonoBehaviour
 {
+
+
+    [Serializable]
+    public class TypeLogLevel
+    {
+        [Tooltip("Any one of that type will do! Which specific game object you get it from should not matter at all.")]
+        public MonoBehaviour component;
+        public ELogLevels logLevel;
+    }
+
+    [Serializable]
+    public class DebugVisualisation
+    {
+        public Material material;
+        public bool enabled;
+        public MeshRenderer[] meshRenderers;
+    }
 
     private static QDebugManager instance;
     public static QDebugManager Instance
@@ -25,9 +35,41 @@ public class QDebugManager : MonoBehaviour
 
     public TypeLogLevel[] typeLogLevels;
 
+    public DebugVisualisation[] debugVisualisations;
+
     private void Awake()
     {
         SingletonSetup();
+    }
+
+    private void Start()
+    {
+        InitialiseDebugVisualisations();
+    }
+
+    private void Update()
+    {
+        VisualisationRoutine();
+    }
+
+    private void InitialiseDebugVisualisations()
+    {
+        foreach (DebugVisualisation debugVisualisation in debugVisualisations)
+        {
+            debugVisualisation.meshRenderers = QTools.GetAllMeshRenderers(debugVisualisation.material);
+        }
+    }
+
+    private async void VisualisationRoutine()
+    {
+        foreach (DebugVisualisation debugVisualisation in debugVisualisations)
+        {
+            foreach (MeshRenderer meshRenderer in debugVisualisation.meshRenderers)
+            {
+                meshRenderer.enabled = debugVisualisation.enabled;
+                QDebugManager.Instance.Mild(this, "set MeshRenderer " + meshRenderer.name + " to " + debugVisualisation.enabled);
+            }
+        }
     }
 
     private ELogLevels ComponentLogLevel(Component component)
@@ -43,12 +85,19 @@ public class QDebugManager : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("QDebugManager could not find the loglevel of " + component.name);
+        Debug.LogWarning("QDebugManager could not find the loglevel of " + receivedComponentType.Name);
         return ELogLevels.None;
+    }
+
+    private string FilterContent(Component component, string content)
+    {
+        content = component.gameObject.name + "'s " + component.GetType().Name + ":\n" + content;
+        return content;
     }
 
     public void Severe(Component component, string content)
     {
+        content = FilterContent(component, content);
         if (ComponentLogLevel(component) >= ELogLevels.Severe)
         {
             Debug.LogError(content);
@@ -57,6 +106,7 @@ public class QDebugManager : MonoBehaviour
 
     public void Important(Component component, string content)
     {
+        content = FilterContent(component, content);
         if (ComponentLogLevel(component) >= ELogLevels.Important)
         {
             Debug.LogWarning(content);
@@ -65,6 +115,7 @@ public class QDebugManager : MonoBehaviour
 
     public void Mild(Component component, string content)
     {
+        content = FilterContent(component, content);
         if (ComponentLogLevel(component) >= ELogLevels.Mild)
         {
             Debug.Log(content);
@@ -73,6 +124,7 @@ public class QDebugManager : MonoBehaviour
 
     public void Verbose(Component component, string content)
     {
+        content = FilterContent(component, content);
         if (ComponentLogLevel(component) >= ELogLevels.Verbose)
         {
             Debug.Log(content);
@@ -81,6 +133,7 @@ public class QDebugManager : MonoBehaviour
 
     public void Trace(Component component, string content)
     {
+        content = FilterContent(component, content);
         if (ComponentLogLevel(component) >= ELogLevels.Trace)
         {
             Debug.Log(content);
