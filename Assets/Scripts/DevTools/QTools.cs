@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-// The *Why is this function not native?* class.
 public static class QTools
 {
 
