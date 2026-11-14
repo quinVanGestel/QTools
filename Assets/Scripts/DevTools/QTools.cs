@@ -224,5 +224,23 @@ public static class QTools
         return arrayCopy;
     }
 
+    /// <summary>
+    /// Fills the array with objects of the array's type
+    /// </summary>
+    /// <param name="factory">Constructor arguments that will be used for each initialisation. Must take the form of () => new(put arguments here)</param>
+    // AI: Called when the type has a parameterless constructor
+    public static void FillArray<T>(T[] arrayReference) where T : new()
+    {
+        FillArray(arrayReference, () => new T());
+    }
+
+    // AI: Called when the type needs constructor arguments
+    public static void FillArray<T>(T[] arrayReference, Func<T> factory)
+    {
+        for (int i = 0; i < arrayReference.Length; i++)
+        {
+            arrayReference[i] = factory();
+        }
+    }
 
 }
