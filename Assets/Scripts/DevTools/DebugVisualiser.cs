@@ -22,10 +22,9 @@ public class DebugVisualiser : MonoBehaviour
     [SerializeField] private float refreshRate;
     private float timeSinceRefresh;
 
-    private void Start()
+    private void Awake()
     {
         SingletonSetup();
-        FetchMeshRendererReferences();
     }
 
     private void Update()
@@ -49,7 +48,7 @@ public class DebugVisualiser : MonoBehaviour
         QDebugManager.Instance.Verbose(this, "Running RefreshMeshRendererReferences");
         foreach (DebugVisualisation debugVisualisation in debugVisualisations)
         {
-            debugVisualisation.meshRenderers = QTools.GetAllMeshRenderers(debugVisualisation.material);
+            debugVisualisation.meshRenderers = QTools.getAllMeshRenderers(debugVisualisation.material);
             QDebugManager.Instance.Trace(this, "Fetched all meshrenderers with material " + debugVisualisation.material.name + " length: " + debugVisualisation.meshRenderers.Length);
         }
     }
