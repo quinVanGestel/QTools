@@ -243,4 +243,34 @@ public static class QTools
         }
     }
 
+    private int handleUnderflowRecursive(int value, int minValue, int maxValue)
+    {
+        if (value < minValue)
+        {
+            value += maxValue + 1;
+        }
+
+        if (value < minValue)
+        {
+            value = handleUnderflowRecursive(value, minValue, maxValue);
+        }
+
+        return value;
+    }
+
+    private int handleOverflowRecursive(int value, int maxValue)
+    {
+        if (value > maxValue)
+        {
+            value -= maxValue + 1;
+        }
+
+        if (value > maxValue)
+        {
+            value = handleOverflowRecursive(value, maxValue);
+        }
+
+        return value;
+    }
+
 }
