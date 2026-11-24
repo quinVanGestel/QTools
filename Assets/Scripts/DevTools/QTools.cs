@@ -243,7 +243,7 @@ public static class QTools
         }
     }
 
-    private int handleUnderflowRecursive(int value, int minValue, int maxValue)
+    public static int handleUnderflowRecursive(int value, int maxValue, int minValue)
     {
         if (value < minValue)
         {
@@ -258,7 +258,7 @@ public static class QTools
         return value;
     }
 
-    private int handleOverflowRecursive(int value, int maxValue)
+    public static int handleOverflowRecursive(int value, int maxValue)
     {
         if (value > maxValue)
         {
@@ -272,5 +272,6 @@ public static class QTools
 
         return value;
     }
+
 
 }
