@@ -1,3 +1,4 @@
+// Alteration of: https://csharpindepth.com/articles/Singleton
 public sealed class Singleton<T> where T : class, new()
 {
     private static T instance = null;
@@ -9,10 +10,7 @@ public sealed class Singleton<T> where T : class, new()
         {
             lock (padlock)
             {
-                if (instance == null)
-                {
-                    instance = new();
-                }
+                instance ??= new();
                 return instance;
             }
         }
